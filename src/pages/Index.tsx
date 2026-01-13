@@ -1,12 +1,105 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, Suspense } from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight, Play } from 'lucide-react';
+import Header from '@/components/Header';
+import AuthModal from '@/components/AuthModal';
+import HeroScene from '@/components/three/HeroScene';
 
 const Index = () => {
+  const [authModal, setAuthModal] = useState<{ open: boolean; mode: 'login' | 'signup' }>({
+    open: false,
+    mode: 'login',
+  });
+
+  const openLogin = () => setAuthModal({ open: true, mode: 'login' });
+  const openSignUp = () => setAuthModal({ open: true, mode: 'signup' });
+  const closeAuth = () => setAuthModal({ ...authModal, open: false });
+  const switchMode = () =>
+    setAuthModal((prev) => ({
+      ...prev,
+      mode: prev.mode === 'login' ? 'signup' : 'login',
+    }));
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="relative h-screen w-full overflow-hidden bg-background">
+      {/* 3D Scene Background */}
+      <Suspense fallback={<div className="absolute inset-0 bg-background" />}>
+        <HeroScene />
+      </Suspense>
+
+      {/* Gradient overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background/80 pointer-events-none z-10" />
+
+      {/* Header */}
+      <Header onLoginClick={openLogin} onSignUpClick={openSignUp} />
+
+      {/* Hero Content */}
+      <main className="relative z-20 h-full flex flex-col items-center justify-center px-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+          className="max-w-4xl"
+        >
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8"
+          >
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-sm font-medium text-primary">Azure Certified Training</span>
+          </motion.div>
+
+          {/* Headline */}
+          <h1 className="text-5xl md:text-7xl font-bold text-foreground leading-tight mb-6">
+            Master <span className="text-gradient-azure">DevOps</span>
+            <br />
+            <span className="text-muted-foreground">on Azure Cloud</span>
+          </h1>
+
+          {/* Subtext */}
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
+            Industry-leading DevOps training powered by Microsoft Azure. 
+            Transform your career with hands-on cloud expertise.
+          </p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <button
+              onClick={openSignUp}
+              className="btn-azure flex items-center gap-2 text-base group"
+            >
+              Start Learning
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            <button className="flex items-center gap-3 px-6 py-3 text-muted-foreground hover:text-foreground transition-colors duration-200 group">
+              <span className="flex items-center justify-center w-10 h-10 rounded-full border border-border group-hover:border-primary/50 group-hover:bg-primary/10 transition-all duration-200">
+                <Play size={16} className="ml-0.5" />
+              </span>
+              Watch Demo
+            </button>
+          </motion.div>
+        </motion.div>
+
+        {/* Bottom gradient fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+      </main>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={authModal.open}
+        onClose={closeAuth}
+        mode={authModal.mode}
+        onModeSwitch={switchMode}
+      />
     </div>
   );
 };
