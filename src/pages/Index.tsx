@@ -95,6 +95,10 @@ const Index = () => {
         mode={authModal.mode}
         onModeSwitch={switchMode}
       />
+      
+      <footer className="absolute bottom-6 left-1/2 -translate-x-1/2 text-sm text-foreground/80 z-50 pointer-events-none">
+        © 2026 VEDINC. All rights reserved.
+      </footer>
     </div>
   );
 };

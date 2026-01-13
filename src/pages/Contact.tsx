@@ -86,83 +86,96 @@ const Contact = () => {
           </motion.div>
 
           {/* Right - Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            
-          >
-            <form onSubmit={handleSubmit} className="glass-card rounded-3xl p-8 md:p-10">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs text-muted-foreground mb-2">Full name</label>
-                  <div className="relative">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                    <input
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Your name"
-                      className="input-dark pl-12 h-12 rounded-lg"
-                      required
-                    />
-                  </div>
-                </div>
+         {/* Right - Form */}
+<motion.div
+  initial={{ opacity: 0, x: 20 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.6 }}
+>
+  <form 
+    onSubmit={handleSubmit} 
+    className="bg-black border border-blue-500 rounded-none p-8 md:p-12 shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+  >
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="space-y-2">
+        <label className="block text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold">
+          Full name
+        </label>
+        <div className="relative group">
+          <User className="absolute left-0 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-blue-500 transition-colors" size={16} />
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Your Name"
+            className="w-full bg-transparent border-b border-white/20 rounded-none h-10 pl-8 pr-4 text-sm text-white outline-none focus:border-blue-500 transition-all placeholder:text-white/50"
+            required
+          />
+        </div>
+      </div>
 
-                <div>
-                  <label className="block text-xs text-muted-foreground mb-2">Email</label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                    <input
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="you@company.com"
-                      className="input-dark pl-12 h-12 rounded-lg"
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
+      <div className="space-y-2">
+        <label className="block text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold">
+          Email Address
+        </label>
+        <div className="relative group">
+          <Mail className="absolute left-0 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-blue-500 transition-colors" size={16} />
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email Address"
+            className="w-full bg-transparent border-b border-white/20 rounded-none h-10 pl-8 pr-4 text-sm text-white outline-none focus:border-blue-500 transition-all placeholder:text-white/50"
+            required
+          />
+        </div>
+      </div>
+    </div>
 
-              <div className="mt-4">
-                <label className="block text-xs text-muted-foreground mb-2">Message</label>
-                <div className="relative">
-                  <MessageSquare className="absolute left-4 top-4 text-muted-foreground" size={18} />
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Tell us how we can help..."
-                    rows={6}
-                    className="input-dark pl-12 resize-none rounded-xl"
-                    required
-                  />
-                </div>
-              </div>
+    <div className="mt-10 space-y-2">
+      <label className="block text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold">
+        Detailed Message
+      </label>
+      <div className="relative group">
+        <MessageSquare className="absolute left-0 top-2 text-white/40 group-focus-within:text-blue-500 transition-colors" size={16} />
+        <textarea
+          name="message"
+          value={formData.message}
+          onChange={handleChange}
+          placeholder="How can we help you?"
+          rows={4}
+          className="w-full bg-transparent border-b border-white/20 rounded-none pl-8 pt-1 text-sm text-white outline-none focus:border-blue-500 transition-all resize-none placeholder:text-white/50"
+          required
+        />
+      </div>
+    </div>
 
-              <div className="mt-6">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full inline-flex items-center justify-center gap-3 bg-gradient-to-r from-primary to-azure-light text-primary-foreground font-semibold px-6 py-3 rounded-xl shadow-azure hover:scale-[1.02] transition-transform duration-200 disabled:opacity-60"
-                >
-                  {isSubmitting ? (
-                    <span className="animate-pulse">Sending...</span>
-                  ) : submitted ? (
-                    <span>Message Sent ✓</span>
-                  ) : (
-                    <>
-                      <Send size={16} />
-                      <span>Send Message</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          </motion.div>
+    <div className="mt-12">
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-blue-600 text-white font-black uppercase tracking-[0.2em] text-[12px] py-5 rounded-none hover:bg-blue-500 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(37,99,235,0.3)]"
+      >
+        {isSubmitting ? (
+          "PROCESSING..."
+        ) : (
+          <>
+            <Send size={16} />
+            <span>Send Message</span>
+          </>
+        )}
+      </button>
+    </div>
+  </form>
+</motion.div>
         </div>
       </main>
+      
+      <footer className="absolute bottom-6 left-1/2 -translate-x-1/2 text-sm text-foreground/80 z-50 pointer-events-none">
+        © 2026 VEDINC. All rights reserved.
+      </footer>
 
       <AuthModal isOpen={authModal.open} onClose={closeAuth} mode={authModal.mode} onModeSwitch={switchMode} />
     </div>
