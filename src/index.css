@@ -129,6 +129,17 @@
   .input-dark {
     @apply w-full px-4 py-3 rounded-lg bg-secondary border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200;
   }
+
+  /* Small utility: keep text normal, turn azure on hover */
+  .hover-blue {
+    color: hsl(var(--foreground));
+    transition: color 200ms ease, transform 200ms ease;
+  }
+
+  .hover-blue:hover {
+    color: hsl(var(--azure));
+    transform: translateY(-1px);
+  }
 }
 
 @layer utilities {

@@ -54,7 +54,7 @@ const Index = () => {
 
           {/* Headline */}
           <h1 className="text-5xl md:text-7xl font-bold text-foreground leading-tight mb-6">
-            Master <span className="text-gradient-azure">DevOps</span>
+            Master <span className="hover-blue">DevOps</span>
             <br />
             <span className="text-muted-foreground">with Azure Cloud</span>
           </h1>
