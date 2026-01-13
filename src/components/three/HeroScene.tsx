@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, MeshDistortMaterial } from '@react-three/drei';
 import * as THREE from 'three';
@@ -131,6 +131,55 @@ const ParticleField = ({ count }: ParticleFieldProps) => {
   );
 };
 
+interface StarLayerProps {
+  count: number;
+  depthRange: [number, number];
+  mousePosition: React.MutableRefObject<{ x: number; y: number }>;
+  multiplier: number;
+  size?: number;
+  yOffset?: number;
+}
+
+const StarLayer = ({ count, depthRange, mousePosition, multiplier, size = 0.06, yOffset = 0 }: StarLayerProps) => {
+  const groupRef = useRef<THREE.Group>(null);
+  const pointsRef = useRef<THREE.Points>(null);
+
+  const positions = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 40;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 30;
+      pos[i * 3 + 2] = Math.random() * (depthRange[1] - depthRange[0]) + depthRange[0];
+    }
+    return pos;
+  }, [count, depthRange]);
+
+  useFrame(() => {
+    if (groupRef.current) {
+      const targetX = -mousePosition.current.x * multiplier;
+      const targetY = -mousePosition.current.y * multiplier * 0.6 + yOffset;
+      groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, 0.06);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.06);
+      groupRef.current.rotation.z = Math.sin(Date.now() * 0.0001) * 0.002;
+    }
+
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = Date.now() * 0.00002;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      <points ref={pointsRef}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+        </bufferGeometry>
+        <pointsMaterial size={size} color={AZURE_LIGHT} transparent opacity={0.85} sizeAttenuation />
+      </points>
+    </group>
+  );
+};
+
 interface SceneContentProps {
   mousePosition: React.MutableRefObject<{ x: number; y: number }>;
 }
@@ -207,7 +256,13 @@ const SceneContent = ({ mousePosition }: SceneContentProps) => {
       <pointLight position={[5, -5, -5]} intensity={0.8} color="#ffffff" distance={10} />
       
       {/* Background particles */}
-      <ParticleField count={200} />
+      <ParticleField count={120} />
+
+      {/* Responsive star layers (move with cursor) */}
+      <StarLayer count={220} depthRange={[-20, -6]} mousePosition={mousePosition} multiplier={0.25} size={0.04} />
+      <StarLayer count={80} depthRange={[-4, 3]} mousePosition={mousePosition} multiplier={0.9} size={0.08} />
+      {/* Extra bottom layer to add depth near the bottom of the hero */}
+      <StarLayer count={140} depthRange={[1, 6]} mousePosition={mousePosition} multiplier={1.4} size={0.06} yOffset={-8} />
       
       {/* Background nodes */}
       <group ref={groupRef}>
@@ -232,6 +287,7 @@ const SceneContent = ({ mousePosition }: SceneContentProps) => {
 const HeroScene = () => {
   const mousePosition = useRef({ x: 0, y: 0 });
   
+  // Local handler still present for accuracy when pointer is over the canvas container
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     mousePosition.current = {
@@ -239,6 +295,38 @@ const HeroScene = () => {
       y: -((e.clientY - rect.top) / rect.height - 0.5) * 2,
     };
   };
+
+  // Add global listeners so background responds even when cursor is over UI elements
+  useEffect(() => {
+    const handleWindowMove = (e: MouseEvent | TouchEvent) => {
+      let clientX = 0;
+      let clientY = 0;
+
+      if (e instanceof TouchEvent) {
+        if (e.touches && e.touches[0]) {
+          clientX = e.touches[0].clientX;
+          clientY = e.touches[0].clientY;
+        }
+      } else {
+        const me = e as MouseEvent;
+        clientX = me.clientX;
+        clientY = me.clientY;
+      }
+
+      mousePosition.current = {
+        x: (clientX / window.innerWidth - 0.5) * 2,
+        y: -(clientY / window.innerHeight - 0.5) * 2,
+      };
+    };
+
+    window.addEventListener('mousemove', handleWindowMove);
+    window.addEventListener('touchmove', handleWindowMove, { passive: true });
+
+    return () => {
+      window.removeEventListener('mousemove', handleWindowMove);
+      window.removeEventListener('touchmove', handleWindowMove as EventListener);
+    };
+  }, []);
 
   return (
     <div 

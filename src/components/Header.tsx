@@ -30,14 +30,16 @@ const Header = ({ onLoginClick, onSignUpClick }: HeaderProps) => {
             <img
               src={vedincLogo}
               alt="VEDINC"
-              className="h-10 w-auto object-contain"
+              className="h-20 sm:h-24 w-auto object-contain"
             />
             <div className="h-8 w-px bg-border/50" />
-            <img
-              src={azureLogo}
-              alt="Microsoft Azure"
-              className="h-6 w-auto object-contain"
-            />
+            <span className="inline-flex items-center justify-center bg-azure-light/6 p-1 rounded-md shadow-azure">
+              <img
+                src={azureLogo}
+                alt="Microsoft Azure"
+                className="h-8 sm:h-10 w-auto object-contain transform transition-all duration-200 hover:scale-105"
+              />
+            </span>
           </Link>
         </div>
 

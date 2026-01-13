@@ -46,9 +46,9 @@ const Index = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8"
+            
           >
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+           
             <span className="text-sm font-medium text-primary">Azure Certified Training</span>
           </motion.div>
 
@@ -56,7 +56,7 @@ const Index = () => {
           <h1 className="text-5xl md:text-7xl font-bold text-foreground leading-tight mb-6">
             Master <span className="text-gradient-azure">DevOps</span>
             <br />
-            <span className="text-muted-foreground">on Azure Cloud</span>
+            <span className="text-muted-foreground">with Azure Cloud</span>
           </h1>
 
           {/* Subtext */}
@@ -80,12 +80,7 @@ const Index = () => {
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
 
-            <button className="flex items-center gap-3 px-6 py-3 text-muted-foreground hover:text-foreground transition-colors duration-200 group">
-              <span className="flex items-center justify-center w-10 h-10 rounded-full border border-border group-hover:border-primary/50 group-hover:bg-primary/10 transition-all duration-200">
-                <Play size={16} className="ml-0.5" />
-              </span>
-              Watch Demo
-            </button>
+          
           </motion.div>
         </motion.div>
 
